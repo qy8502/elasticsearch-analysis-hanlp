@@ -1,5 +1,7 @@
 buildscript {
     repositories {
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://snapshots.elastic.co/maven' }
         mavenCentral()
         jcenter()
     }
@@ -7,14 +9,19 @@ buildscript {
         classpath "org.elasticsearch.gradle:build-tools:${elasticsearchVersion}"
     }
 }
+plugins {
+    id 'java-gradle-plugin'
+    id 'de.thetaphi.forbiddenapis' version '3.2'
+}
 
 group = 'org.elasticsearch'
 version = "$elasticsearchVersion"
 description = 'elasticsearch-analysis-hanlp'
 
 apply plugin: 'java'
-apply plugin: 'idea'
 apply plugin: 'elasticsearch.esplugin'
+apply plugin: 'checkstyle'
+apply plugin: 'idea'
 
 esplugin {
     name 'analysis-hanlp'
@@ -22,6 +29,10 @@ esplugin {
     classname 'org.elasticsearch.plugin.analysis.hanlp.AnalysisHanLPPlugin'
     licenseFile = rootProject.file('LICENSE.txt')
     noticeFile = rootProject.file('NOTICE.txt')
+}
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 jar {
@@ -52,12 +63,19 @@ configurations.all() {
         configuration.resolutionStrategy.force(['org.apache.httpcomponents:httpcore:4.4.14'])
 }
 
+repositories {
+    maven { url 'https://maven.aliyun.com/repository/public/' }
+    maven { url 'https://snapshots.elastic.co/maven' }
+    mavenCentral()
+    jcenter()
+}
+
 dependencies {
-    compile 'com.hankcs:hanlp:portable-1.7.8'
-    compile 'commons-codec:commons-codec:1.15'
-    compile 'commons-logging:commons-logging:1.2'
-    compile 'org.apache.httpcomponents:httpclient:4.5.13'
-    compile 'org.apache.httpcomponents:httpcore:4.4.14'
+    api 'com.hankcs:hanlp:portable-1.8.2'
+    api 'commons-codec:commons-codec:1.15'
+    api 'commons-logging:commons-logging:1.2'
+    api 'org.apache.httpcomponents:httpclient:4.5.13'
+    api 'org.apache.httpcomponents:httpcore:4.4.14'
 }
 
 checkstyle {
@@ -80,37 +98,37 @@ forbiddenApisMain {
     ]
 }
 
-forbiddenPatterns {
-    forbiddenPatterns.enabled = false;
-}
+//forbiddenPatterns {
+//    forbiddenPatterns.enabled = false;
+//}
 
-licenseHeaders {
-    licenseHeaders.enabled = false
-}
+//licenseHeaders {
+//    licenseHeaders.enabled = false
+//}
 
-dependencyLicenses {
-    dependencyLicenses.enabled = false
-}
+//dependencyLicenses {
+//    dependencyLicenses.enabled = false
+//}
 
-thirdPartyAudit {
-    thirdPartyAudit.enabled = false
-}
+//thirdPartyAudit {
+//    thirdPartyAudit.enabled = false
+//}
 
-validateNebulaPom {
-    validateNebulaPom.enabled = false
-}
+//validateNebulaPom {
+//    validateNebulaPom.enabled = false
+//}
 
-loggerUsageCheck {
-    loggerUsageCheck.enabled = false
-}
+//loggerUsageCheck {
+//    loggerUsageCheck.enabled = false
+//}
 
 test {
     systemProperty 'tests.security.manager', 'false'
 }
 
-testingConventions {
-    testingConventions.enabled = false
-}
+//testingConventions {
+//    testingConventions.enabled = false
+//}
 
 javadoc {
     enabled = false
